@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="segment_regular" model="terminal.segment">
+        <field name="name">Reguler</field>
+        <field name="description">Pelanggan umum Terminal Coffee.</field>
+    </record>
+
+    <record id="survey_form_default" model="terminal.survey.form">
+        <field name="name">Survey Kepuasan Terminal Coffee</field>
+        <field name="is_active">1</field>
+    </record>
+
+    <record id="survey_question_service" model="terminal.survey.question">
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="sequence">10</field>
+        <field name="question_text">Bagaimana penilaian Anda terhadap pelayanan staf?</field>
+        <field name="answer_type">scale</field>
+        <field name="is_required">1</field>
+    </record>
+
+    <record id="survey_question_cleanliness" model="terminal.survey.question">
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="sequence">20</field>
+        <field name="question_text">Bagaimana penilaian Anda terhadap kebersihan fasilitas?</field>
+        <field name="answer_type">scale</field>
+        <field name="is_required">1</field>
+    </record>
+
+    <record id="survey_question_improvement" model="terminal.survey.question">
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="sequence">30</field>
+        <field name="question_text">Apa saran utama Anda untuk Terminal Coffee?</field>
+        <field name="answer_type">text</field>
+        <field name="is_required">0</field>
+    </record>
+</odoo>
