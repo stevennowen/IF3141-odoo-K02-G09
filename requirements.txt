@@ -20,6 +20,7 @@ psutil
 psycopg2-binary
 pydot
 pyOpenSSL
+cryptography
 pyparsing
 PyPDF2
 pyserial
