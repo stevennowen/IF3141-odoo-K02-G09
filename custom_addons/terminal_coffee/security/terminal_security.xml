@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_terminal_coffee" model="ir.module.category">
+        <field name="name">Terminal Coffee</field>
+        <field name="description">Access control for Terminal Coffee E-Survey and CRM.</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="group_terminal_pemasaran" model="res.groups">
+        <field name="name">Terminal Coffee / Staf Pemasaran</field>
+        <field name="category_id" ref="terminal_coffee.module_category_terminal_coffee"/>
+    </record>
+
+    <record id="group_terminal_manajemen" model="res.groups">
+        <field name="name">Terminal Coffee / Manajemen</field>
+        <field name="category_id" ref="terminal_coffee.module_category_terminal_coffee"/>
+    </record>
+</odoo>
