@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_terminal_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard Analitik</field>
+        <field name="res_model">terminal.survey.feedback</field>
+        <field name="view_mode">graph,pivot,tree</field>
+        <field name="search_view_id" ref="view_terminal_survey_feedback_search"/>
+        <field name="context">{'search_default_date_filter': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada feedback survei.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_terminal_complaint_recap" model="ir.actions.act_window">
+        <field name="name">Rekap Keluhan Fasilitas</field>
+        <field name="res_model">terminal.survey.feedback</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="search_view_id" ref="view_terminal_survey_feedback_search"/>
+        <field name="domain">[('comment', '!=', False)]</field>
+    </record>
+</odoo>
