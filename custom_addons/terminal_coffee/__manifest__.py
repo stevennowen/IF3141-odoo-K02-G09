@@ -1,0 +1,23 @@
+{
+    "name": "Terminal Coffee E-Survey & CRM",
+    "summary": "Custom E-Survey and CRM module for Terminal Coffee",
+    "version": "17.0.1.0.0",
+    "category": "Marketing/CRM",
+    "author": "K02-G09",
+    "license": "LGPL-3",
+    "depends": ["base", "web"],
+    "data": [
+        "security/terminal_security.xml",
+        "security/ir.model.access.csv",
+        "data/terminal_initial_data.xml",
+        "views/survey_templates.xml",
+        "views/terminal_segment_views.xml",
+        "views/terminal_customer_views.xml",
+        "views/terminal_survey_views.xml",
+        "views/terminal_campaign_views.xml",
+        "views/terminal_dashboard_views.xml",
+        "views/terminal_menus.xml",
+    ],
+    "installable": True,
+    "application": True,
+}
