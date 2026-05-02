@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_terminal_segment_tree" model="ir.ui.view">
+        <field name="name">terminal.segment.tree</field>
+        <field name="model">terminal.segment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="customer_count"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_terminal_segment_form" model="ir.ui.view">
+        <field name="name">terminal.segment.form</field>
+        <field name="model">terminal.segment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                    <notebook>
+                        <page string="Pelanggan">
+                            <field name="customer_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="loyalty_score"/>
+                                    <field name="contact_number_display"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_terminal_segment" model="ir.actions.act_window">
+        <field name="name">Segmen Pelanggan</field>
+        <field name="res_model">terminal.segment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
