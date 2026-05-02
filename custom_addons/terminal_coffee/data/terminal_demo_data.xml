@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="base.user_admin" model="res.users">
+        <field name="groups_id" eval="[(4, ref('terminal_coffee.group_terminal_manajemen')), (4, ref('terminal_coffee.group_terminal_pemasaran'))]"/>
+    </record>
+
+    <record id="segment_student" model="terminal.segment">
+        <field name="name">Mahasiswa</field>
+        <field name="description">Pelanggan mahasiswa dengan frekuensi kunjungan tinggi.</field>
+    </record>
+
+    <record id="segment_community" model="terminal.segment">
+        <field name="name">Komunitas</field>
+        <field name="description">Pelanggan dari komunitas, event, atau kunjungan kelompok.</field>
+    </record>
+
+    <record id="segment_worker" model="terminal.segment">
+        <field name="name">Pekerja</field>
+        <field name="description">Pelanggan pekerja kantoran atau remote worker.</field>
+    </record>
+
+    <record id="customer_anya" model="terminal.customer">
+        <field name="name">Anya Prameswari</field>
+        <field name="segment_id" ref="terminal_coffee.segment_student"/>
+        <field name="contact_number_display">081234560101</field>
+        <field name="loyalty_score">8</field>
+    </record>
+
+    <record id="customer_bima" model="terminal.customer">
+        <field name="name">Bima Pratama</field>
+        <field name="segment_id" ref="terminal_coffee.segment_worker"/>
+        <field name="contact_number_display">081234560202</field>
+        <field name="loyalty_score">6</field>
+    </record>
+
+    <record id="customer_citra" model="terminal.customer">
+        <field name="name">Citra Lestari</field>
+        <field name="segment_id" ref="terminal_coffee.segment_regular"/>
+        <field name="contact_number_display">081234560303</field>
+        <field name="loyalty_score">3</field>
+    </record>
+
+    <record id="customer_dimas" model="terminal.customer">
+        <field name="name">Dimas Nugroho</field>
+        <field name="segment_id" ref="terminal_coffee.segment_community"/>
+        <field name="contact_number_display">081234560404</field>
+        <field name="loyalty_score">10</field>
+    </record>
+
+    <record id="customer_elsa" model="terminal.customer">
+        <field name="name">Elsa Maharani</field>
+        <field name="segment_id" ref="terminal_coffee.segment_student"/>
+        <field name="contact_number_display">081234560505</field>
+        <field name="loyalty_score">5</field>
+    </record>
+
+    <record id="feedback_anya_1" model="terminal.survey.feedback">
+        <field name="customer_id" ref="terminal_coffee.customer_anya"/>
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="satisfaction_score">5</field>
+        <field name="comment">Pelayanan cepat dan tempat nyaman untuk kerja kelompok.</field>
+        <field name="fill_date">2026-04-25 10:15:00</field>
+    </record>
+
+    <record id="feedback_bima_1" model="terminal.survey.feedback">
+        <field name="customer_id" ref="terminal_coffee.customer_bima"/>
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="satisfaction_score">4</field>
+        <field name="comment">WiFi cukup stabil, tapi stop kontak di area belakang kurang.</field>
+        <field name="fill_date">2026-04-26 13:40:00</field>
+    </record>
+
+    <record id="feedback_citra_1" model="terminal.survey.feedback">
+        <field name="customer_id" ref="terminal_coffee.customer_citra"/>
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="satisfaction_score">3</field>
+        <field name="comment">Toilet perlu dicek lebih sering pada jam ramai.</field>
+        <field name="fill_date">2026-04-27 18:20:00</field>
+    </record>
+
+    <record id="feedback_dimas_1" model="terminal.survey.feedback">
+        <field name="customer_id" ref="terminal_coffee.customer_dimas"/>
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="satisfaction_score">5</field>
+        <field name="comment">Cocok untuk meetup komunitas, area duduk luas.</field>
+        <field name="fill_date">2026-04-29 19:05:00</field>
+    </record>
+
+    <record id="feedback_elsa_1" model="terminal.survey.feedback">
+        <field name="customer_id" ref="terminal_coffee.customer_elsa"/>
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="satisfaction_score">4</field>
+        <field name="comment">Musik agak terlalu keras saat sore.</field>
+        <field name="fill_date">2026-05-01 16:35:00</field>
+    </record>
+
+    <record id="answer_anya_service" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_anya_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_service"/>
+        <field name="answer_text">5</field>
+    </record>
+
+    <record id="answer_anya_cleanliness" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_anya_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_cleanliness"/>
+        <field name="answer_text">5</field>
+    </record>
+
+    <record id="answer_anya_improvement" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_anya_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_improvement"/>
+        <field name="answer_text">Pertahankan area belajar kelompok.</field>
+    </record>
+
+    <record id="answer_bima_service" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_bima_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_service"/>
+        <field name="answer_text">4</field>
+    </record>
+
+    <record id="answer_bima_cleanliness" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_bima_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_cleanliness"/>
+        <field name="answer_text">4</field>
+    </record>
+
+    <record id="answer_bima_improvement" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_bima_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_improvement"/>
+        <field name="answer_text">Tambah stop kontak di area belakang.</field>
+    </record>
+
+    <record id="answer_citra_service" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_citra_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_service"/>
+        <field name="answer_text">3</field>
+    </record>
+
+    <record id="answer_citra_cleanliness" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_citra_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_cleanliness"/>
+        <field name="answer_text">2</field>
+    </record>
+
+    <record id="answer_citra_improvement" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_citra_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_improvement"/>
+        <field name="answer_text">Perlu jadwal kebersihan toilet lebih rutin.</field>
+    </record>
+
+    <record id="answer_dimas_service" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_dimas_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_service"/>
+        <field name="answer_text">5</field>
+    </record>
+
+    <record id="answer_dimas_cleanliness" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_dimas_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_cleanliness"/>
+        <field name="answer_text">4</field>
+    </record>
+
+    <record id="answer_dimas_improvement" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_dimas_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_improvement"/>
+        <field name="answer_text">Sediakan paket reservasi untuk komunitas.</field>
+    </record>
+
+    <record id="answer_elsa_service" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_elsa_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_service"/>
+        <field name="answer_text">4</field>
+    </record>
+
+    <record id="answer_elsa_cleanliness" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_elsa_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_cleanliness"/>
+        <field name="answer_text">4</field>
+    </record>
+
+    <record id="answer_elsa_improvement" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_elsa_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_improvement"/>
+        <field name="answer_text">Atur volume musik saat jam belajar.</field>
+    </record>
+
+    <record id="campaign_loyal_student" model="terminal.campaign">
+        <field name="name">Voucher Loyal Mahasiswa</field>
+        <field name="promotion_type">E-Voucher Diskon 15%</field>
+        <field name="segment_criteria">Mahasiswa</field>
+        <field name="loyalty_min_score">5</field>
+        <field name="message">Gunakan kode TERMINAL15 untuk diskon minuman favorit Anda.</field>
+    </record>
+
+    <record id="campaign_community_meetup" model="terminal.campaign">
+        <field name="name">Promo Meetup Komunitas</field>
+        <field name="promotion_type">Paket Reservasi Komunitas</field>
+        <field name="segment_criteria">Komunitas</field>
+        <field name="loyalty_min_score">5</field>
+        <field name="message">Reservasi komunitas minggu ini mendapat bonus snack platter.</field>
+    </record>
+
+    <record id="interaction_anya" model="terminal.interaction">
+        <field name="campaign_id" ref="terminal_coffee.campaign_loyal_student"/>
+        <field name="customer_id" ref="terminal_coffee.customer_anya"/>
+        <field name="send_date">2026-05-01 09:00:00</field>
+        <field name="status">Terkirim</field>
+    </record>
+
+    <record id="interaction_elsa" model="terminal.interaction">
+        <field name="campaign_id" ref="terminal_coffee.campaign_loyal_student"/>
+        <field name="customer_id" ref="terminal_coffee.customer_elsa"/>
+        <field name="send_date">2026-05-01 09:05:00</field>
+        <field name="status">Terkirim</field>
+    </record>
+
+    <record id="interaction_dimas" model="terminal.interaction">
+        <field name="campaign_id" ref="terminal_coffee.campaign_community_meetup"/>
+        <field name="customer_id" ref="terminal_coffee.customer_dimas"/>
+        <field name="send_date">2026-05-01 09:10:00</field>
+        <field name="status">Terkirim</field>
+    </record>
+</odoo>

@@ -10,6 +10,7 @@
         "security/terminal_security.xml",
         "security/ir.model.access.csv",
         "data/terminal_initial_data.xml",
+        "data/terminal_demo_data.xml",
         "views/survey_templates.xml",
         "views/terminal_segment_views.xml",
         "views/terminal_customer_views.xml",
