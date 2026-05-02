@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_terminal_root"
+              name="Terminal Coffee"
+              sequence="10"
+              groups="terminal_coffee.group_terminal_pemasaran,terminal_coffee.group_terminal_manajemen"/>
+
+    <menuitem id="menu_terminal_dashboard"
+              name="Dashboard"
+              parent="menu_terminal_root"
+              action="action_terminal_dashboard"
+              sequence="10"
+              groups="terminal_coffee.group_terminal_manajemen"/>
+
+    <menuitem id="menu_terminal_complaint_recap"
+              name="Rekap Keluhan"
+              parent="menu_terminal_root"
+              action="action_terminal_complaint_recap"
+              sequence="20"
+              groups="terminal_coffee.group_terminal_manajemen"/>
+
+    <menuitem id="menu_terminal_survey_root"
+              name="E-Survey"
+              parent="menu_terminal_root"
+              sequence="30"
+              groups="terminal_coffee.group_terminal_pemasaran"/>
+
+    <menuitem id="menu_terminal_survey_form"
+              name="Form Kuesioner"
+              parent="menu_terminal_survey_root"
+              action="action_terminal_survey_form"
+              sequence="10"/>
+
+    <menuitem id="menu_terminal_survey_feedback"
+              name="Feedback Survei"
+              parent="menu_terminal_survey_root"
+              action="action_terminal_survey_feedback"
+              sequence="20"/>
+
+    <menuitem id="menu_terminal_crm_root"
+              name="CRM"
+              parent="menu_terminal_root"
+              sequence="40"
+              groups="terminal_coffee.group_terminal_pemasaran"/>
+
+    <menuitem id="menu_terminal_customer"
+              name="Direktori Pelanggan"
+              parent="menu_terminal_crm_root"
+              action="action_terminal_customer"
+              sequence="10"/>
+
+    <menuitem id="menu_terminal_segment"
+              name="Segmen Pelanggan"
+              parent="menu_terminal_crm_root"
+              action="action_terminal_segment"
+              sequence="20"/>
+
+    <menuitem id="menu_terminal_campaign"
+              name="Kampanye Promosi"
+              parent="menu_terminal_crm_root"
+              action="action_terminal_campaign"
+              sequence="30"/>
+
+    <menuitem id="menu_terminal_interaction"
+              name="Riwayat Interaksi"
+              parent="menu_terminal_crm_root"
+              action="action_terminal_interaction"
+              sequence="40"/>
+</odoo>
