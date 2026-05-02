@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_terminal_customer_tree" model="ir.ui.view">
+        <field name="name">terminal.customer.tree</field>
+        <field name="model">terminal.customer</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="segment_id"/>
+                <field name="contact_number_display"/>
+                <field name="loyalty_score"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_terminal_customer_form" model="ir.ui.view">
+        <field name="name">terminal.customer.form</field>
+        <field name="model">terminal.customer</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="segment_id"/>
+                        </group>
+                        <group>
+                            <field name="contact_number_display"/>
+                            <field name="loyalty_score"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Feedback">
+                            <field name="feedback_ids" readonly="1">
+                                <tree>
+                                    <field name="fill_date"/>
+                                    <field name="form_id"/>
+                                    <field name="satisfaction_score"/>
+                                    <field name="comment"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Promosi">
+                            <field name="interaction_ids" readonly="1">
+                                <tree>
+                                    <field name="send_date"/>
+                                    <field name="campaign_id"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_terminal_customer_search" model="ir.ui.view">
+        <field name="name">terminal.customer.search</field>
+        <field name="model">terminal.customer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="segment_id"/>
+                <filter name="loyal_customer" string="Loyalitas &gt; 5" domain="[('loyalty_score', '&gt;', 5)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_segment" string="Segmen" context="{'group_by': 'segment_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_terminal_customer" model="ir.actions.act_window">
+        <field name="name">Direktori Pelanggan</field>
+        <field name="res_model">terminal.customer</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_terminal_customer_search"/>
+    </record>
+</odoo>
