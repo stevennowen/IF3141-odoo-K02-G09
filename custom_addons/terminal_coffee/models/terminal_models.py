@@ -1,8 +1,10 @@
 import base64
+import json
 import logging
 import re
 import secrets
 
+import requests
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 from odoo import _, api, fields, models
@@ -64,6 +66,16 @@ class TerminalEncryptionMixin(models.AbstractModel):
             raise ValidationError(_("Nomor WhatsApp harus berisi 10 sampai 15 digit."))
         if not (compact.startswith("08") or compact.startswith("628")):
             raise ValidationError(_("Nomor WhatsApp harus menggunakan format Indonesia, contoh 081234567890 atau +6281234567890."))
+
+    @api.model
+    def _normalize_whatsapp_number(self, value):
+        self._validate_contact_number_format(value)
+        compact = PHONE_SEPARATOR_RE.sub("", value.strip())
+        if compact.startswith("+"):
+            compact = compact[1:]
+        if compact.startswith("628"):
+            return "0%s" % compact[2:]
+        return compact
 
 
 class TerminalSegment(models.Model):
@@ -250,33 +262,101 @@ class TerminalCampaign(models.Model):
             domain.append(("segment_id.name", "ilike", self.segment_criteria))
         return self.env["terminal.customer"].search(domain)
 
-    def action_distribute_promotions(self):
+    def _get_or_create_interaction(self, customer):
+        self.ensure_one()
         Interaction = self.env["terminal.interaction"]
+        interaction = Interaction.search(
+            [("campaign_id", "=", self.id), ("customer_id", "=", customer.id)],
+            limit=1,
+        )
+        if interaction:
+            return interaction
+        return Interaction.create(
+            {
+                "campaign_id": self.id,
+                "customer_id": customer.id,
+                "status": "Siap Dikirim",
+            }
+        )
+
+    def _send_fonnte_messages(self, payload):
+        config = self.env["ir.config_parameter"].sudo()
+        token = config.get_param("terminal_coffee.fonnte_token")
+        api_url = config.get_param("terminal_coffee.fonnte_api_url") or "https://api.fonnte.com/send"
+        if not token:
+            raise UserError(
+                _("Token Fonnte belum dikonfigurasi. Isi System Parameter terminal_coffee.fonnte_token terlebih dahulu.")
+            )
+
+        try:
+            response = requests.post(
+                api_url,
+                headers={"Authorization": token},
+                data={"data": json.dumps(payload)},
+                timeout=30,
+            )
+            response.raise_for_status()
+            try:
+                result = response.json()
+            except ValueError:
+                result = {"status": True, "raw": response.text}
+        except requests.RequestException as error:
+            raise UserError(_("Gagal menghubungi Fonnte: %s") % error) from error
+
+        if result.get("status") is False:
+            message = result.get("reason") or result.get("detail") or result.get("message") or result
+            raise UserError(_("Fonnte menolak pengiriman: %s") % message)
+        return result
+
+    def action_distribute_promotions(self):
         for campaign in self:
+            if not campaign.message:
+                raise UserError(_("Isi pesan atau e-voucher wajib diisi sebelum distribusi."))
             customers = campaign._get_target_customers()
             if not customers:
                 raise UserError(_("Tidak ada pelanggan yang sesuai dengan kriteria kampanye."))
-            existing_pairs = set(
-                Interaction.search([("campaign_id", "=", campaign.id), ("customer_id", "in", customers.ids)]).mapped(
-                    lambda item: item.customer_id.id
-                )
-            )
+
+            payload = []
+            interaction_by_target = {}
+            failed_without_number = 0
             for customer in customers:
-                if customer.id not in existing_pairs:
-                    Interaction.create(
-                        {
-                            "campaign_id": campaign.id,
-                            "customer_id": customer.id,
-                            "send_date": fields.Datetime.now(),
-                            "status": "Terkirim",
-                        }
-                    )
+                interaction = campaign._get_or_create_interaction(customer)
+                if interaction.status == "Terkirim":
+                    continue
+                contact_number = customer.contact_number_display
+                if not contact_number:
+                    interaction.write({"send_date": fields.Datetime.now(), "status": "Gagal - Nomor kosong"})
+                    failed_without_number += 1
+                    continue
+                try:
+                    target = customer._normalize_whatsapp_number(contact_number)
+                except ValidationError as error:
+                    interaction.write({"send_date": fields.Datetime.now(), "status": "Gagal - %s" % error})
+                    failed_without_number += 1
+                    continue
+                payload.append({"target": target, "message": campaign.message, "delay": "1"})
+                interaction_by_target[target] = interaction
+
+            if not payload:
+                raise UserError(_("Tidak ada nomor pelanggan yang bisa dikirim atau semua target sudah pernah terkirim."))
+
+            campaign._send_fonnte_messages(payload)
+            for interaction in interaction_by_target.values():
+                interaction.write({"send_date": fields.Datetime.now(), "status": "Terkirim"})
+
+            sent_count = len(interaction_by_target)
+            message = _("Promosi berhasil dikirim ke %s pelanggan melalui Fonnte.") % sent_count
+            if failed_without_number:
+                message = _("%s %s pelanggan gagal karena nomor kosong atau tidak valid.") % (
+                    message,
+                    failed_without_number,
+                )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
                 "title": _("Kampanye diproses"),
-                "message": _("Riwayat pengiriman promosi berhasil dibuat."),
+                "message": message,
                 "type": "success",
                 "sticky": False,
             },
