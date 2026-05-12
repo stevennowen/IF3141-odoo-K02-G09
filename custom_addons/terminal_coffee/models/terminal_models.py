@@ -312,48 +312,80 @@ class TerminalCampaign(models.Model):
         return result
 
     def action_distribute_promotions(self):
-        for campaign in self:
-            if not campaign.message:
-                raise UserError(_("Isi pesan atau e-voucher wajib diisi sebelum distribusi."))
-            customers = campaign._get_target_customers()
-            if not customers:
-                raise UserError(_("Tidak ada pelanggan yang sesuai dengan kriteria kampanye."))
+        self.ensure_one()
+        if not self.message:
+            raise UserError(_("Isi pesan atau e-voucher wajib diisi sebelum distribusi."))
+        customers = self._get_target_customers()
+        if not customers:
+            raise UserError(_("Tidak ada pelanggan yang sesuai dengan kriteria kampanye."))
 
-            payload = []
-            interaction_by_target = {}
-            failed_without_number = 0
-            for customer in customers:
-                interaction = campaign._get_or_create_interaction(customer)
-                if interaction.status == "Terkirim":
-                    continue
-                contact_number = customer.contact_number_display
-                if not contact_number:
-                    interaction.write({"send_date": fields.Datetime.now(), "status": "Gagal - Nomor kosong"})
-                    failed_without_number += 1
-                    continue
-                try:
-                    target = customer._normalize_whatsapp_number(contact_number)
-                except ValidationError as error:
-                    interaction.write({"send_date": fields.Datetime.now(), "status": "Gagal - %s" % error})
-                    failed_without_number += 1
-                    continue
-                payload.append({"target": target, "message": campaign.message, "delay": "1"})
-                interaction_by_target[target] = interaction
+        wizard = self.env["terminal.campaign.distribution.wizard"].create(
+            {
+                "campaign_id": self.id,
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "customer_id": customer.id,
+                            "selected": True,
+                        },
+                    )
+                    for customer in customers
+                ],
+            }
+        )
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Konfirmasi Target Promosi"),
+            "res_model": "terminal.campaign.distribution.wizard",
+            "view_mode": "form",
+            "res_id": wizard.id,
+            "target": "new",
+        }
 
-            if not payload:
-                raise UserError(_("Tidak ada nomor pelanggan yang bisa dikirim atau semua target sudah pernah terkirim."))
+    def _distribute_promotions_to_customers(self, customers):
+        self.ensure_one()
+        if not self.message:
+            raise UserError(_("Isi pesan atau e-voucher wajib diisi sebelum distribusi."))
+        if not customers:
+            raise UserError(_("Pilih minimal satu pelanggan untuk dikirim promosi."))
 
-            campaign._send_fonnte_messages(payload)
-            for interaction in interaction_by_target.values():
-                interaction.write({"send_date": fields.Datetime.now(), "status": "Terkirim"})
+        payload = []
+        interaction_by_target = {}
+        failed_without_number = 0
+        for customer in customers:
+            interaction = self._get_or_create_interaction(customer)
+            if interaction.status == "Terkirim":
+                continue
+            contact_number = customer.contact_number_display
+            if not contact_number:
+                interaction.write({"send_date": fields.Datetime.now(), "status": "Gagal - Nomor kosong"})
+                failed_without_number += 1
+                continue
+            try:
+                target = customer._normalize_whatsapp_number(contact_number)
+            except ValidationError as error:
+                interaction.write({"send_date": fields.Datetime.now(), "status": "Gagal - %s" % error})
+                failed_without_number += 1
+                continue
+            payload.append({"target": target, "message": self.message, "delay": "1"})
+            interaction_by_target[target] = interaction
 
-            sent_count = len(interaction_by_target)
-            message = _("Promosi berhasil dikirim ke %s pelanggan melalui Fonnte.") % sent_count
-            if failed_without_number:
-                message = _("%s %s pelanggan gagal karena nomor kosong atau tidak valid.") % (
-                    message,
-                    failed_without_number,
-                )
+        if not payload:
+            raise UserError(_("Tidak ada nomor pelanggan yang bisa dikirim atau semua target sudah pernah terkirim."))
+
+        self._send_fonnte_messages(payload)
+        for interaction in interaction_by_target.values():
+            interaction.write({"send_date": fields.Datetime.now(), "status": "Terkirim"})
+
+        sent_count = len(interaction_by_target)
+        message = _("Promosi berhasil dikirim ke %s pelanggan melalui Fonnte.") % sent_count
+        if failed_without_number:
+            message = _("%s %s pelanggan gagal karena nomor kosong atau tidak valid.") % (
+                message,
+                failed_without_number,
+            )
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -364,6 +396,62 @@ class TerminalCampaign(models.Model):
                 "sticky": False,
             },
         }
+
+
+class TerminalCampaignDistributionWizard(models.TransientModel):
+    _name = "terminal.campaign.distribution.wizard"
+    _description = "Konfirmasi Distribusi Kampanye"
+
+    campaign_id = fields.Many2one("terminal.campaign", string="Kampanye", required=True, readonly=True)
+    line_ids = fields.One2many(
+        "terminal.campaign.distribution.wizard.line",
+        "wizard_id",
+        string="Target Pelanggan",
+    )
+
+    def action_check_all(self):
+        for wizard in self:
+            wizard.line_ids.write({"selected": True})
+        return self._reload_wizard()
+
+    def action_uncheck_all(self):
+        for wizard in self:
+            wizard.line_ids.write({"selected": False})
+        return self._reload_wizard()
+
+    def action_send_selected(self):
+        self.ensure_one()
+        customers = self.line_ids.filtered("selected").mapped("customer_id")
+        return self.campaign_id._distribute_promotions_to_customers(customers)
+
+    def _reload_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Konfirmasi Target Promosi"),
+            "res_model": self._name,
+            "view_mode": "form",
+            "res_id": self.id,
+            "target": "new",
+        }
+
+
+class TerminalCampaignDistributionWizardLine(models.TransientModel):
+    _name = "terminal.campaign.distribution.wizard.line"
+    _description = "Baris Target Distribusi Kampanye"
+    _order = "customer_id"
+
+    wizard_id = fields.Many2one(
+        "terminal.campaign.distribution.wizard",
+        string="Wizard",
+        required=True,
+        ondelete="cascade",
+    )
+    selected = fields.Boolean(string="Kirim", default=True)
+    customer_id = fields.Many2one("terminal.customer", string="Pelanggan", required=True, readonly=True)
+    segment_id = fields.Many2one(related="customer_id.segment_id", string="Segmen", readonly=True)
+    loyalty_score = fields.Integer(related="customer_id.loyalty_score", string="Skor Loyalitas", readonly=True)
+    contact_number_display = fields.Char(related="customer_id.contact_number_display", string="No WhatsApp", readonly=True)
 
 
 class TerminalInteraction(models.Model):

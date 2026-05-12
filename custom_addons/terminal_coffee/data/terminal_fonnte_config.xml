@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="config_fonnte_api_url" model="ir.config_parameter">
+        <field name="key">terminal_coffee.fonnte_api_url</field>
+        <field name="value">https://api.fonnte.com/send</field>
+    </record>
+
+    <record id="config_fonnte_token" model="ir.config_parameter">
+        <field name="key">terminal_coffee.fonnte_token</field>
+        <field name="value"></field>
+    </record>
+</odoo>
