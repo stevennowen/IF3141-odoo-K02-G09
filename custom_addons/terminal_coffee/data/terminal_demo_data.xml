@@ -32,70 +32,70 @@
     <record id="customer_anya" model="terminal.customer">
         <field name="name">Anya Prameswari</field>
         <field name="segment_id" ref="terminal_coffee.segment_student"/>
-        <field name="contact_number_display">081234560101</field>
+        <field name="contact_number_display">081378220211</field>
         <field name="loyalty_score">8</field>
     </record>
 
     <record id="customer_bima" model="terminal.customer">
         <field name="name">Bima Pratama</field>
         <field name="segment_id" ref="terminal_coffee.segment_worker"/>
-        <field name="contact_number_display">081234560202</field>
+        <field name="contact_number_display">081378220212</field>
         <field name="loyalty_score">6</field>
     </record>
 
     <record id="customer_citra" model="terminal.customer">
         <field name="name">Citra Lestari</field>
         <field name="segment_id" ref="terminal_coffee.segment_regular"/>
-        <field name="contact_number_display">081234560303</field>
+        <field name="contact_number_display">081378220213</field>
         <field name="loyalty_score">3</field>
     </record>
 
     <record id="customer_dimas" model="terminal.customer">
         <field name="name">Dimas Nugroho</field>
         <field name="segment_id" ref="terminal_coffee.segment_community"/>
-        <field name="contact_number_display">081234560404</field>
+        <field name="contact_number_display">081378220214</field>
         <field name="loyalty_score">10</field>
     </record>
 
     <record id="customer_elsa" model="terminal.customer">
         <field name="name">Elsa Maharani</field>
         <field name="segment_id" ref="terminal_coffee.segment_student"/>
-        <field name="contact_number_display">081234560505</field>
+        <field name="contact_number_display">081378220215</field>
         <field name="loyalty_score">5</field>
     </record>
 
     <record id="customer_farhan" model="terminal.customer">
         <field name="name">Farhan Ramadhan</field>
         <field name="segment_id" ref="terminal_coffee.segment_freelancer"/>
-        <field name="contact_number_display">+6281234560606</field>
+        <field name="contact_number_display">081378220216</field>
         <field name="loyalty_score">9</field>
     </record>
 
     <record id="customer_gita" model="terminal.customer">
         <field name="name">Gita Anggraini</field>
         <field name="segment_id" ref="terminal_coffee.segment_family"/>
-        <field name="contact_number_display">0812-3456-0707</field>
+        <field name="contact_number_display">081378220217</field>
         <field name="loyalty_score">4</field>
     </record>
 
     <record id="customer_hana" model="terminal.customer">
         <field name="name">Hana Kartika</field>
         <field name="segment_id" ref="terminal_coffee.segment_worker"/>
-        <field name="contact_number_display">0812 3456 0808</field>
+        <field name="contact_number_display">081378220218</field>
         <field name="loyalty_score">7</field>
     </record>
 
     <record id="customer_irfan" model="terminal.customer">
         <field name="name">Irfan Maulana</field>
         <field name="segment_id" ref="terminal_coffee.segment_regular"/>
-        <field name="contact_number_display">081234560909</field>
+        <field name="contact_number_display">081378220219</field>
         <field name="loyalty_score">2</field>
     </record>
 
     <record id="customer_julia" model="terminal.customer">
         <field name="name">Julia Safitri</field>
         <field name="segment_id" ref="terminal_coffee.segment_community"/>
-        <field name="contact_number_display">+62 812 3456 1010</field>
+        <field name="contact_number_display">081378220220</field>
         <field name="loyalty_score">12</field>
     </record>
 
