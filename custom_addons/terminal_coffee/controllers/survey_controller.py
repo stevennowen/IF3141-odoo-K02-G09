@@ -1,4 +1,5 @@
 from odoo import fields, http
+from odoo.exceptions import ValidationError
 from odoo.http import request
 
 
@@ -84,6 +85,13 @@ class TerminalSurveyController(http.Controller):
         errors = {}
         if not post.get("customer_name", "").strip():
             errors["customer_name"] = "Nama wajib diisi."
+
+        contact_number = post.get("contact_number", "").strip()
+        if contact_number:
+            try:
+                request.env["terminal.customer"].sudo()._validate_contact_number_format(contact_number)
+            except ValidationError as error:
+                errors["contact_number"] = str(error)
 
         try:
             score = int(post.get("satisfaction_score", "0"))

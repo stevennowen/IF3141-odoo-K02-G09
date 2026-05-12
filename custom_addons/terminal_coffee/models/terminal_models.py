@@ -1,5 +1,6 @@
 import base64
 import logging
+import re
 import secrets
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
@@ -8,6 +9,9 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
+
+PHONE_SEPARATOR_RE = re.compile(r"[\s().-]+")
+PHONE_ALLOWED_RE = re.compile(r"^\+?[0-9\s().-]+$")
 
 
 class TerminalEncryptionMixin(models.AbstractModel):
@@ -45,6 +49,21 @@ class TerminalEncryptionMixin(models.AbstractModel):
         except Exception:
             _logger.exception("Failed to decrypt Terminal Coffee contact value")
             return _("Unable to decrypt")
+
+    @api.model
+    def _validate_contact_number_format(self, value):
+        if not value:
+            return
+        contact = value.strip()
+        compact = PHONE_SEPARATOR_RE.sub("", contact)
+        if not PHONE_ALLOWED_RE.match(contact) or compact.count("+") > 1:
+            raise ValidationError(_("Nomor WhatsApp hanya boleh berisi angka, spasi, tanda +, -, titik, atau kurung."))
+        if compact.startswith("+"):
+            compact = compact[1:]
+        if not compact.isdigit() or len(compact) < 10 or len(compact) > 15:
+            raise ValidationError(_("Nomor WhatsApp harus berisi 10 sampai 15 digit."))
+        if not (compact.startswith("08") or compact.startswith("628")):
+            raise ValidationError(_("Nomor WhatsApp harus menggunakan format Indonesia, contoh 081234567890 atau +6281234567890."))
 
 
 class TerminalSegment(models.Model):
@@ -89,6 +108,7 @@ class TerminalCustomer(models.Model):
 
     def _inverse_contact_number_display(self):
         for customer in self:
+            customer._validate_contact_number_format(customer.contact_number_display)
             customer.contact_number = customer._encrypt_value(customer.contact_number_display)
 
     @api.model_create_multi
@@ -96,14 +116,18 @@ class TerminalCustomer(models.Model):
         for vals in vals_list:
             plain = vals.pop("contact_number_display", False) or vals.get("contact_number")
             if plain:
+                self._validate_contact_number_format(plain)
                 vals["contact_number"] = self._encrypt_value(plain)
         return super().create(vals_list)
 
     def write(self, vals):
         vals = dict(vals)
         if "contact_number_display" in vals:
-            vals["contact_number"] = self._encrypt_value(vals.pop("contact_number_display"))
+            plain = vals.pop("contact_number_display")
+            self._validate_contact_number_format(plain)
+            vals["contact_number"] = self._encrypt_value(plain)
         elif vals.get("contact_number"):
+            self._validate_contact_number_format(vals["contact_number"])
             vals["contact_number"] = self._encrypt_value(vals["contact_number"])
         return super().write(vals)
 

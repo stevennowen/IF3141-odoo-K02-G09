@@ -19,6 +19,16 @@
         <field name="description">Pelanggan pekerja kantoran atau remote worker.</field>
     </record>
 
+    <record id="segment_freelancer" model="terminal.segment">
+        <field name="name">Freelancer</field>
+        <field name="description">Pelanggan yang sering bekerja mandiri dari coffee shop.</field>
+    </record>
+
+    <record id="segment_family" model="terminal.segment">
+        <field name="name">Keluarga</field>
+        <field name="description">Pelanggan yang datang bersama keluarga pada akhir pekan.</field>
+    </record>
+
     <record id="customer_anya" model="terminal.customer">
         <field name="name">Anya Prameswari</field>
         <field name="segment_id" ref="terminal_coffee.segment_student"/>
@@ -52,6 +62,41 @@
         <field name="segment_id" ref="terminal_coffee.segment_student"/>
         <field name="contact_number_display">081234560505</field>
         <field name="loyalty_score">5</field>
+    </record>
+
+    <record id="customer_farhan" model="terminal.customer">
+        <field name="name">Farhan Ramadhan</field>
+        <field name="segment_id" ref="terminal_coffee.segment_freelancer"/>
+        <field name="contact_number_display">+6281234560606</field>
+        <field name="loyalty_score">9</field>
+    </record>
+
+    <record id="customer_gita" model="terminal.customer">
+        <field name="name">Gita Anggraini</field>
+        <field name="segment_id" ref="terminal_coffee.segment_family"/>
+        <field name="contact_number_display">0812-3456-0707</field>
+        <field name="loyalty_score">4</field>
+    </record>
+
+    <record id="customer_hana" model="terminal.customer">
+        <field name="name">Hana Kartika</field>
+        <field name="segment_id" ref="terminal_coffee.segment_worker"/>
+        <field name="contact_number_display">0812 3456 0808</field>
+        <field name="loyalty_score">7</field>
+    </record>
+
+    <record id="customer_irfan" model="terminal.customer">
+        <field name="name">Irfan Maulana</field>
+        <field name="segment_id" ref="terminal_coffee.segment_regular"/>
+        <field name="contact_number_display">081234560909</field>
+        <field name="loyalty_score">2</field>
+    </record>
+
+    <record id="customer_julia" model="terminal.customer">
+        <field name="name">Julia Safitri</field>
+        <field name="segment_id" ref="terminal_coffee.segment_community"/>
+        <field name="contact_number_display">+62 812 3456 1010</field>
+        <field name="loyalty_score">12</field>
     </record>
 
     <record id="feedback_anya_1" model="terminal.survey.feedback">
@@ -92,6 +137,30 @@
         <field name="satisfaction_score">4</field>
         <field name="comment">Musik agak terlalu keras saat sore.</field>
         <field name="fill_date">2026-05-01 16:35:00</field>
+    </record>
+
+    <record id="feedback_farhan_1" model="terminal.survey.feedback">
+        <field name="customer_id" ref="terminal_coffee.customer_farhan"/>
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="satisfaction_score">5</field>
+        <field name="comment">Meja dekat jendela nyaman untuk meeting online.</field>
+        <field name="fill_date">2026-05-02 11:25:00</field>
+    </record>
+
+    <record id="feedback_gita_1" model="terminal.survey.feedback">
+        <field name="customer_id" ref="terminal_coffee.customer_gita"/>
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="satisfaction_score">3</field>
+        <field name="comment">Area keluarga perlu kursi tambahan saat akhir pekan.</field>
+        <field name="fill_date">2026-05-03 15:45:00</field>
+    </record>
+
+    <record id="feedback_hana_1" model="terminal.survey.feedback">
+        <field name="customer_id" ref="terminal_coffee.customer_hana"/>
+        <field name="form_id" ref="terminal_coffee.survey_form_default"/>
+        <field name="satisfaction_score">4</field>
+        <field name="comment">Pesanan cepat, tapi area parkir penuh saat jam makan siang.</field>
+        <field name="fill_date">2026-05-04 12:10:00</field>
     </record>
 
     <record id="answer_anya_service" model="terminal.survey.answer">
@@ -184,6 +253,60 @@
         <field name="answer_text">Atur volume musik saat jam belajar.</field>
     </record>
 
+    <record id="answer_farhan_service" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_farhan_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_service"/>
+        <field name="answer_text">5</field>
+    </record>
+
+    <record id="answer_farhan_cleanliness" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_farhan_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_cleanliness"/>
+        <field name="answer_text">5</field>
+    </record>
+
+    <record id="answer_farhan_improvement" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_farhan_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_improvement"/>
+        <field name="answer_text">Tambahkan opsi paket kopi harian untuk pelanggan kerja remote.</field>
+    </record>
+
+    <record id="answer_gita_service" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_gita_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_service"/>
+        <field name="answer_text">3</field>
+    </record>
+
+    <record id="answer_gita_cleanliness" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_gita_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_cleanliness"/>
+        <field name="answer_text">4</field>
+    </record>
+
+    <record id="answer_gita_improvement" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_gita_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_improvement"/>
+        <field name="answer_text">Sediakan kursi anak dan area duduk keluarga.</field>
+    </record>
+
+    <record id="answer_hana_service" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_hana_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_service"/>
+        <field name="answer_text">4</field>
+    </record>
+
+    <record id="answer_hana_cleanliness" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_hana_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_cleanliness"/>
+        <field name="answer_text">4</field>
+    </record>
+
+    <record id="answer_hana_improvement" model="terminal.survey.answer">
+        <field name="feedback_id" ref="terminal_coffee.feedback_hana_1"/>
+        <field name="question_id" ref="terminal_coffee.survey_question_improvement"/>
+        <field name="answer_text">Perlu penanda parkir penuh di area depan.</field>
+    </record>
+
     <record id="campaign_loyal_student" model="terminal.campaign">
         <field name="name">Voucher Loyal Mahasiswa</field>
         <field name="promotion_type">E-Voucher Diskon 15%</field>
@@ -198,6 +321,30 @@
         <field name="segment_criteria">Komunitas</field>
         <field name="loyalty_min_score">5</field>
         <field name="message">Reservasi komunitas minggu ini mendapat bonus snack platter.</field>
+    </record>
+
+    <record id="campaign_remote_worker" model="terminal.campaign">
+        <field name="name">Work From Cafe Bundle</field>
+        <field name="promotion_type">Bundling Kopi dan Snack</field>
+        <field name="segment_criteria">Freelancer</field>
+        <field name="loyalty_min_score">7</field>
+        <field name="message">Tunjukkan kode REMOTE20 untuk bundling kopi dan snack khusus pelanggan kerja remote.</field>
+    </record>
+
+    <record id="campaign_family_weekend" model="terminal.campaign">
+        <field name="name">Weekend Family Treat</field>
+        <field name="promotion_type">Promo Akhir Pekan</field>
+        <field name="segment_criteria">Keluarga</field>
+        <field name="loyalty_min_score">3</field>
+        <field name="message">Nikmati bonus pastry untuk kunjungan keluarga setiap Sabtu dan Minggu.</field>
+    </record>
+
+    <record id="campaign_worker_lunch" model="terminal.campaign">
+        <field name="name">Lunch Break Coffee</field>
+        <field name="promotion_type">Diskon Jam Makan Siang</field>
+        <field name="segment_criteria">Pekerja</field>
+        <field name="loyalty_min_score">6</field>
+        <field name="message">Gunakan kode LUNCH10 untuk diskon kopi pada pukul 11.00-14.00.</field>
     </record>
 
     <record id="interaction_anya" model="terminal.interaction">
@@ -218,6 +365,34 @@
         <field name="campaign_id" ref="terminal_coffee.campaign_community_meetup"/>
         <field name="customer_id" ref="terminal_coffee.customer_dimas"/>
         <field name="send_date">2026-05-01 09:10:00</field>
+        <field name="status">Terkirim</field>
+    </record>
+
+    <record id="interaction_julia" model="terminal.interaction">
+        <field name="campaign_id" ref="terminal_coffee.campaign_community_meetup"/>
+        <field name="customer_id" ref="terminal_coffee.customer_julia"/>
+        <field name="send_date">2026-05-01 09:15:00</field>
+        <field name="status">Terkirim</field>
+    </record>
+
+    <record id="interaction_farhan" model="terminal.interaction">
+        <field name="campaign_id" ref="terminal_coffee.campaign_remote_worker"/>
+        <field name="customer_id" ref="terminal_coffee.customer_farhan"/>
+        <field name="send_date">2026-05-02 08:30:00</field>
+        <field name="status">Terkirim</field>
+    </record>
+
+    <record id="interaction_gita" model="terminal.interaction">
+        <field name="campaign_id" ref="terminal_coffee.campaign_family_weekend"/>
+        <field name="customer_id" ref="terminal_coffee.customer_gita"/>
+        <field name="send_date">2026-05-03 10:00:00</field>
+        <field name="status">Gagal</field>
+    </record>
+
+    <record id="interaction_hana" model="terminal.interaction">
+        <field name="campaign_id" ref="terminal_coffee.campaign_worker_lunch"/>
+        <field name="customer_id" ref="terminal_coffee.customer_hana"/>
+        <field name="send_date">2026-05-04 10:45:00</field>
         <field name="status">Terkirim</field>
     </record>
 </odoo>
