@@ -241,6 +241,7 @@ class TerminalCampaign(models.Model):
     name = fields.Char(string="Nama Kampanye", required=True)
     promotion_type = fields.Char(string="Jenis Promosi", required=True)
     segment_criteria = fields.Char(string="Kriteria Segmen")
+    segment_criteria_id = fields.Many2one("terminal.segment", string="Kriteria Segmen")
     loyalty_min_score = fields.Integer(string="Minimum Skor Loyalitas", default=5)
     message = fields.Text(string="Pesan / E-Voucher")
     create_date = fields.Datetime(string="Tgl Dibuat", readonly=True)
@@ -258,7 +259,9 @@ class TerminalCampaign(models.Model):
     def _get_target_customers(self):
         self.ensure_one()
         domain = [("loyalty_score", ">=", self.loyalty_min_score)]
-        if self.segment_criteria:
+        if self.segment_criteria_id:
+            domain.append(("segment_id", "=", self.segment_criteria_id.id))
+        elif self.segment_criteria:
             domain.append(("segment_id.name", "ilike", self.segment_criteria))
         return self.env["terminal.customer"].search(domain)
 

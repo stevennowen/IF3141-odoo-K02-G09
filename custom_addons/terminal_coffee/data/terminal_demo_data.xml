@@ -310,7 +310,7 @@
     <record id="campaign_loyal_student" model="terminal.campaign">
         <field name="name">Voucher Loyal Mahasiswa</field>
         <field name="promotion_type">E-Voucher Diskon 15%</field>
-        <field name="segment_criteria">Mahasiswa</field>
+        <field name="segment_criteria_id" ref="terminal_coffee.segment_student"/>
         <field name="loyalty_min_score">5</field>
         <field name="message">Gunakan kode TERMINAL15 untuk diskon minuman favorit Anda.</field>
     </record>
@@ -318,7 +318,7 @@
     <record id="campaign_community_meetup" model="terminal.campaign">
         <field name="name">Promo Meetup Komunitas</field>
         <field name="promotion_type">Paket Reservasi Komunitas</field>
-        <field name="segment_criteria">Komunitas</field>
+        <field name="segment_criteria_id" ref="terminal_coffee.segment_community"/>
         <field name="loyalty_min_score">5</field>
         <field name="message">Reservasi komunitas minggu ini mendapat bonus snack platter.</field>
     </record>
@@ -326,7 +326,7 @@
     <record id="campaign_remote_worker" model="terminal.campaign">
         <field name="name">Work From Cafe Bundle</field>
         <field name="promotion_type">Bundling Kopi dan Snack</field>
-        <field name="segment_criteria">Freelancer</field>
+        <field name="segment_criteria_id" ref="terminal_coffee.segment_freelancer"/>
         <field name="loyalty_min_score">7</field>
         <field name="message">Tunjukkan kode REMOTE20 untuk bundling kopi dan snack khusus pelanggan kerja remote.</field>
     </record>
@@ -334,7 +334,7 @@
     <record id="campaign_family_weekend" model="terminal.campaign">
         <field name="name">Weekend Family Treat</field>
         <field name="promotion_type">Promo Akhir Pekan</field>
-        <field name="segment_criteria">Keluarga</field>
+        <field name="segment_criteria_id" ref="terminal_coffee.segment_family"/>
         <field name="loyalty_min_score">3</field>
         <field name="message">Nikmati bonus pastry untuk kunjungan keluarga setiap Sabtu dan Minggu.</field>
     </record>
@@ -342,7 +342,7 @@
     <record id="campaign_worker_lunch" model="terminal.campaign">
         <field name="name">Lunch Break Coffee</field>
         <field name="promotion_type">Diskon Jam Makan Siang</field>
-        <field name="segment_criteria">Pekerja</field>
+        <field name="segment_criteria_id" ref="terminal_coffee.segment_worker"/>
         <field name="loyalty_min_score">6</field>
         <field name="message">Gunakan kode LUNCH10 untuk diskon kopi pada pukul 11.00-14.00.</field>
     </record>

@@ -7,7 +7,7 @@
             <tree>
                 <field name="name"/>
                 <field name="promotion_type"/>
-                <field name="segment_criteria"/>
+                <field name="segment_criteria_id"/>
                 <field name="loyalty_min_score"/>
                 <field name="create_date"/>
                 <field name="interaction_count"/>
@@ -28,7 +28,7 @@
                         <group>
                             <field name="name"/>
                             <field name="promotion_type"/>
-                            <field name="segment_criteria" placeholder="Contoh: Mahasiswa, Reguler, Komunitas"/>
+                            <field name="segment_criteria_id" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="loyalty_min_score"/>
