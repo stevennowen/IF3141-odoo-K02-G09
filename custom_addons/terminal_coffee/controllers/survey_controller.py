@@ -113,7 +113,9 @@ class TerminalSurveyController(http.Controller):
                 errors["segment_id"] = "Segmen tidak valid."
 
         contact_number = post.get("contact_number", "").strip()
-        if contact_number:
+        if not contact_number:
+            errors["contact_number"] = "No WhatsApp wajib diisi."
+        else:
             try:
                 request.env["terminal.customer"].sudo()._validate_contact_number_format(contact_number)
             except ValidationError as error:

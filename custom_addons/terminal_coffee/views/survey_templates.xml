@@ -162,8 +162,8 @@
                         </div>
 
                         <div class="field">
-                            <label for="contact_number">No WhatsApp</label>
-                            <input id="contact_number" name="contact_number" type="tel" inputmode="tel" placeholder="Contoh: 081234567890" pattern="(\+?62|0)8[0-9\s().-]{7,13}" t-att-value="values.get('contact_number', '')"/>
+                            <label for="contact_number">No WhatsApp <span class="required">*</span></label>
+                            <input id="contact_number" name="contact_number" type="tel" inputmode="tel" placeholder="Contoh: 081234567890" pattern="(\+?62|0)8[0-9\s().-]{7,13}" t-att-value="values.get('contact_number', '')" required="required"/>
                             <div class="error" t-if="errors.get('contact_number')" t-esc="errors.get('contact_number')"/>
                         </div>
 
