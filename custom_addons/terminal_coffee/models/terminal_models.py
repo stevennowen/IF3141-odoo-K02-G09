@@ -230,6 +230,7 @@ class TerminalSurveyForm(models.Model):
 class TerminalSurveyQuestion(models.Model):
     _name = "terminal.survey.question"
     _description = "Pertanyaan Survei"
+    _rec_name = "question_text"
     _order = "sequence, id"
 
     form_id = fields.Many2one(
@@ -246,14 +247,20 @@ class TerminalSurveyQuestion(models.Model):
 class TerminalSurveyFeedback(models.Model):
     _name = "terminal.survey.feedback"
     _description = "Feedback Survei"
+    _rec_name = "name"
     _order = "fill_date desc"
 
+    name = fields.Char(compute="_compute_name", string="Nama")
     customer_id = fields.Many2one("terminal.customer", string="Pelanggan", required=True, ondelete="restrict")
     form_id = fields.Many2one("terminal.survey.form", string="Form Kuesioner", required=True, ondelete="restrict")
     satisfaction_score = fields.Integer(string="Skor Kepuasan", required=True)
     comment = fields.Text(string="Komentar / Keluhan")
     fill_date = fields.Datetime(string="Tgl Isi", default=fields.Datetime.now, required=True)
     answer_ids = fields.One2many("terminal.survey.answer", "feedback_id", string="Jawaban")
+
+    def _compute_name(self):
+        for feedback in self:
+            feedback.name = _("Feedback %s") % feedback.id if feedback.id else _("Feedback Baru")
 
     @api.constrains("satisfaction_score")
     def _check_satisfaction_score(self):
