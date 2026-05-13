@@ -51,7 +51,7 @@
                     </div>
                     <separator string="Analitik"/>
                     <div class="d-flex flex-wrap gap-2">
-                        <button name="action_open_customer_segment_analysis" type="object" string="Analitik Segmen" class="btn-primary"/>
+                        <button name="action_open_customer_segment_analysis" type="object" string="Analitik Segmen" class="btn-secondary"/>
                         <button name="action_open_campaign_analysis" type="object" string="Analitik Kampanye" class="btn-secondary"/>
                         <button name="action_open_feedback_analysis" type="object" string="Analitik Feedback" class="btn-secondary"/>
                     </div>
