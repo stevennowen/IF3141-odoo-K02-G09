@@ -14,7 +14,12 @@ class TerminalSurveyController(http.Controller):
             )
         return request.render(
             "terminal_coffee.survey_fill",
-            {"survey_form": survey_form, "errors": {}, "values": {}},
+            {
+                "survey_form": survey_form,
+                "segments": request.env["terminal.segment"].sudo().search([]),
+                "errors": {},
+                "values": {},
+            },
         )
 
     @http.route("/survey/fill/<int:form_id>", type="http", auth="public", website=False, methods=["POST"], csrf=True)
@@ -30,7 +35,12 @@ class TerminalSurveyController(http.Controller):
         if errors:
             return request.render(
                 "terminal_coffee.survey_fill",
-                {"survey_form": survey_form, "errors": errors, "values": post},
+                {
+                    "survey_form": survey_form,
+                    "segments": request.env["terminal.segment"].sudo().search([]),
+                    "errors": errors,
+                    "values": post,
+                },
             )
 
         Customer = request.env["terminal.customer"].sudo()
@@ -39,12 +49,16 @@ class TerminalSurveyController(http.Controller):
 
         customer_name = post.get("customer_name", "").strip()
         contact_number = post.get("contact_number", "").strip()
+        segment_id = int(post.get("segment_id"))
         satisfaction_score = int(post.get("satisfaction_score"))
 
         domain = [("name", "=ilike", customer_name)]
         existing_customer = Customer.search(domain, limit=1)
         if existing_customer:
-            values = {"loyalty_score": existing_customer.loyalty_score + 1}
+            values = {
+                "segment_id": segment_id,
+                "loyalty_score": existing_customer.loyalty_score + 1,
+            }
             if contact_number:
                 values["contact_number_display"] = contact_number
             existing_customer.write(values)
@@ -53,6 +67,7 @@ class TerminalSurveyController(http.Controller):
             customer = Customer.create(
                 {
                     "name": customer_name,
+                    "segment_id": segment_id,
                     "contact_number_display": contact_number,
                     "loyalty_score": 1,
                 }
@@ -85,6 +100,17 @@ class TerminalSurveyController(http.Controller):
         errors = {}
         if not post.get("customer_name", "").strip():
             errors["customer_name"] = "Nama wajib diisi."
+
+        segment_id = post.get("segment_id")
+        if not segment_id:
+            errors["segment_id"] = "Segmen wajib dipilih."
+        else:
+            try:
+                segment = request.env["terminal.segment"].sudo().browse(int(segment_id))
+                if not segment.exists():
+                    errors["segment_id"] = "Segmen tidak valid."
+            except ValueError:
+                errors["segment_id"] = "Segmen tidak valid."
 
         contact_number = post.get("contact_number", "").strip()
         if contact_number:

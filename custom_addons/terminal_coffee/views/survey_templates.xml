@@ -66,6 +66,7 @@
                     }
                     input[type="text"],
                     input[type="tel"],
+                    select,
                     textarea {
                         width: 100%;
                         box-sizing: border-box;
@@ -148,6 +149,19 @@
                         </div>
 
                         <div class="field">
+                            <label for="segment_id">Segmen <span class="required">*</span></label>
+                            <select id="segment_id" name="segment_id" required="required">
+                                <option value="">Pilih segmen</option>
+                                <t t-foreach="segments" t-as="segment">
+                                    <option t-att-value="segment.id" t-att-selected="'selected' if values.get('segment_id') == str(segment.id) else None">
+                                        <t t-esc="segment.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                            <div class="error" t-if="errors.get('segment_id')" t-esc="errors.get('segment_id')"/>
+                        </div>
+
+                        <div class="field">
                             <label for="contact_number">No WhatsApp</label>
                             <input id="contact_number" name="contact_number" type="tel" inputmode="tel" placeholder="Contoh: 081234567890" pattern="(\+?62|0)8[0-9\s().-]{7,13}" t-att-value="values.get('contact_number', '')"/>
                             <div class="error" t-if="errors.get('contact_number')" t-esc="errors.get('contact_number')"/>
@@ -164,11 +178,6 @@
                                 </t>
                             </div>
                             <div class="error" t-if="errors.get('satisfaction_score')" t-esc="errors.get('satisfaction_score')"/>
-                        </div>
-
-                        <div class="field">
-                            <label for="comment">Keluhan / Saran</label>
-                            <textarea id="comment" name="comment"><t t-esc="values.get('comment', '')"/></textarea>
                         </div>
 
                         <t t-foreach="survey_form.question_ids" t-as="question">
@@ -194,6 +203,11 @@
                                 <div class="error" t-if="errors.get(field_name)" t-esc="errors.get(field_name)"/>
                             </div>
                         </t>
+
+                        <div class="field">
+                            <label for="comment">Keluhan / Saran</label>
+                            <textarea id="comment" name="comment"><t t-esc="values.get('comment', '')"/></textarea>
+                        </div>
 
                         <button class="submit" type="submit">Kirim Survey</button>
                     </form>
