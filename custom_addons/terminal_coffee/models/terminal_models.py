@@ -16,6 +16,49 @@ PHONE_SEPARATOR_RE = re.compile(r"[\s().-]+")
 PHONE_ALLOWED_RE = re.compile(r"^\+?[0-9\s().-]+$")
 
 
+class TerminalDashboard(models.Model):
+    _name = "terminal.dashboard"
+    _description = "Dashboard Analitik Terminal Coffee"
+    _rec_name = "name"
+
+    name = fields.Char(default="Dashboard", required=True)
+    customer_count = fields.Integer(compute="_compute_kpis", string="Total Pelanggan")
+    segment_count = fields.Integer(compute="_compute_kpis", string="Total Segmen")
+    feedback_count = fields.Integer(compute="_compute_kpis", string="Total Feedback")
+    average_satisfaction = fields.Float(compute="_compute_kpis", string="Rata-rata Kepuasan", digits=(16, 2))
+    campaign_count = fields.Integer(compute="_compute_kpis", string="Total Kampanye")
+    interaction_count = fields.Integer(compute="_compute_kpis", string="Total Pengiriman")
+    delivered_count = fields.Integer(compute="_compute_kpis", string="Terkirim")
+    failed_count = fields.Integer(compute="_compute_kpis", string="Gagal")
+
+    def _compute_kpis(self):
+        Customer = self.env["terminal.customer"]
+        Segment = self.env["terminal.segment"]
+        Feedback = self.env["terminal.survey.feedback"]
+        Campaign = self.env["terminal.campaign"]
+        Interaction = self.env["terminal.interaction"]
+        satisfaction = Feedback.read_group([], ["satisfaction_score:avg"], [])
+        average_satisfaction = satisfaction[0]["satisfaction_score"] if satisfaction else 0.0
+        for dashboard in self:
+            dashboard.customer_count = Customer.search_count([])
+            dashboard.segment_count = Segment.search_count([])
+            dashboard.feedback_count = Feedback.search_count([])
+            dashboard.average_satisfaction = average_satisfaction or 0.0
+            dashboard.campaign_count = Campaign.search_count([])
+            dashboard.interaction_count = Interaction.search_count([])
+            dashboard.delivered_count = Interaction.search_count([("status", "=", "Terkirim")])
+            dashboard.failed_count = Interaction.search_count([("status", "ilike", "Gagal")])
+
+    def action_open_customer_segment_analysis(self):
+        return self.env.ref("terminal_coffee.action_terminal_customer_segment_analysis").read()[0]
+
+    def action_open_campaign_analysis(self):
+        return self.env.ref("terminal_coffee.action_terminal_campaign_analysis").read()[0]
+
+    def action_open_feedback_analysis(self):
+        return self.env.ref("terminal_coffee.action_terminal_dashboard_feedback").read()[0]
+
+
 class TerminalEncryptionMixin(models.AbstractModel):
     _name = "terminal.encryption.mixin"
     _description = "Terminal Coffee AES-256 Encryption Helper"
@@ -461,5 +504,6 @@ class TerminalInteraction(models.Model):
 
     campaign_id = fields.Many2one("terminal.campaign", string="Kampanye", required=True, ondelete="cascade")
     customer_id = fields.Many2one("terminal.customer", string="Pelanggan", required=True, ondelete="restrict")
+    segment_id = fields.Many2one(related="customer_id.segment_id", string="Segmen", store=True, readonly=True)
     send_date = fields.Datetime(string="Tgl Kirim", default=fields.Datetime.now, required=True)
     status = fields.Char(string="Status", default="Terkirim", required=True)

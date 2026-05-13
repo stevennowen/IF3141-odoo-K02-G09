@@ -1,7 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="terminal_dashboard_main" model="terminal.dashboard">
+        <field name="name">Dashboard</field>
+    </record>
+
+    <record id="view_terminal_dashboard_form" model="ir.ui.view">
+        <field name="name">terminal.dashboard.form</field>
+        <field name="model">terminal.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard" create="0" edit="0" delete="0">
+                <sheet>
+                    <separator string="KPI Ringkas"/>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <h4>Feedback</h4>
+                                <group>
+                                    <field name="feedback_count" readonly="1"/>
+                                    <field name="average_satisfaction" readonly="1"/>
+                                </group>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <h4>Pelanggan dan Segmen</h4>
+                                <group>
+                                    <field name="customer_count" readonly="1"/>
+                                    <field name="segment_count" readonly="1"/>
+                                </group>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <h4>Kampanye</h4>
+                                <group>
+                                    <field name="campaign_count" readonly="1"/>
+                                </group>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                            <div class="border rounded p-3 h-100">
+                                <h4>Riwayat Interaksi</h4>
+                                <group>
+                                    <field name="interaction_count" readonly="1"/>
+                                    <field name="delivered_count" readonly="1"/>
+                                    <field name="failed_count" readonly="1"/>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+                    <separator string="Analitik"/>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button name="action_open_customer_segment_analysis" type="object" string="Analitik Segmen" class="btn-primary"/>
+                        <button name="action_open_campaign_analysis" type="object" string="Analitik Kampanye" class="btn-secondary"/>
+                        <button name="action_open_feedback_analysis" type="object" string="Analitik Feedback" class="btn-secondary"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="action_terminal_dashboard" model="ir.actions.act_window">
-        <field name="name">Dashboard Analitik</field>
+        <field name="name">Dashboard</field>
+        <field name="res_model">terminal.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_terminal_dashboard_form"/>
+        <field name="res_id" ref="terminal_dashboard_main"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="view_terminal_customer_segment_graph" model="ir.ui.view">
+        <field name="name">terminal.customer.segment.graph</field>
+        <field name="model">terminal.customer</field>
+        <field name="arch" type="xml">
+            <graph string="Pelanggan per Segmen" type="bar">
+                <field name="segment_id"/>
+                <field name="loyalty_score" type="measure" operator="avg"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_terminal_customer_segment_pivot" model="ir.ui.view">
+        <field name="name">terminal.customer.segment.pivot</field>
+        <field name="model">terminal.customer</field>
+        <field name="arch" type="xml">
+            <pivot string="Analitik Segmen Pelanggan">
+                <field name="segment_id" type="row"/>
+                <field name="loyalty_score" type="measure" operator="avg"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_terminal_customer_segment_analysis" model="ir.actions.act_window">
+        <field name="name">Analitik Segmen</field>
+        <field name="res_model">terminal.customer</field>
+        <field name="view_mode">graph,pivot,tree</field>
+        <field name="context">{'group_by': 'segment_id'}</field>
+    </record>
+
+    <record id="view_terminal_interaction_campaign_graph" model="ir.ui.view">
+        <field name="name">terminal.interaction.campaign.graph</field>
+        <field name="model">terminal.interaction</field>
+        <field name="arch" type="xml">
+            <graph string="Pengiriman Promosi per Kampanye" type="bar">
+                <field name="campaign_id"/>
+                <field name="status"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_terminal_interaction_campaign_pivot" model="ir.ui.view">
+        <field name="name">terminal.interaction.campaign.pivot</field>
+        <field name="model">terminal.interaction</field>
+        <field name="arch" type="xml">
+            <pivot string="Analitik Kampanye Promosi">
+                <field name="campaign_id" type="row"/>
+                <field name="status" type="col"/>
+                <field name="segment_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_terminal_campaign_analysis" model="ir.actions.act_window">
+        <field name="name">Analitik Kampanye</field>
+        <field name="res_model">terminal.interaction</field>
+        <field name="view_mode">graph,pivot,tree</field>
+        <field name="context">{'group_by': ['campaign_id', 'status']}</field>
+    </record>
+
+    <record id="action_terminal_dashboard_feedback" model="ir.actions.act_window">
+        <field name="name">Analitik Feedback</field>
         <field name="res_model">terminal.survey.feedback</field>
         <field name="view_mode">graph,pivot,tree</field>
         <field name="search_view_id" ref="view_terminal_survey_feedback_search"/>
