@@ -12,13 +12,6 @@
               sequence="10"
               groups="terminal_coffee.group_terminal_manajemen"/>
 
-    <menuitem id="menu_terminal_complaint_recap"
-              name="Rekap Keluhan"
-              parent="menu_terminal_root"
-              action="action_terminal_complaint_recap"
-              sequence="20"
-              groups="terminal_coffee.group_terminal_manajemen"/>
-
     <menuitem id="menu_terminal_survey_root"
               name="E-Survey"
               parent="menu_terminal_root"

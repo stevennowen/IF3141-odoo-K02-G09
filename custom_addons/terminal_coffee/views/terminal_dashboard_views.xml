@@ -12,12 +12,4 @@
             </p>
         </field>
     </record>
-
-    <record id="action_terminal_complaint_recap" model="ir.actions.act_window">
-        <field name="name">Rekap Keluhan Fasilitas</field>
-        <field name="res_model">terminal.survey.feedback</field>
-        <field name="view_mode">tree,form,pivot</field>
-        <field name="search_view_id" ref="view_terminal_survey_feedback_search"/>
-        <field name="domain">[('comment', '!=', False)]</field>
-    </record>
 </odoo>
