@@ -10,7 +10,7 @@
         <field name="arch" type="xml">
             <form string="Dashboard" create="0" edit="0" delete="0">
                 <sheet>
-                    <separator string="KPI Ringkas"/>
+                    <separator string="Ringkasan"/>
                     <div class="row">
                         <div class="col-lg-3 col-md-6 col-12 mb-3">
                             <div class="border rounded p-3 h-100">
