@@ -22,7 +22,7 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="segment_id"/>
+                            <field name="segment_id" required="1" options="{'no_create': True, 'no_create_edit': True}"/>
                         </group>
                         <group>
                             <field name="contact_number_display"/>

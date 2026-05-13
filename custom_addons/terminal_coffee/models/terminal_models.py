@@ -103,7 +103,7 @@ class TerminalCustomer(models.Model):
     _inherit = ["terminal.encryption.mixin"]
     _order = "loyalty_score desc, name"
 
-    segment_id = fields.Many2one("terminal.segment", string="Segmen")
+    segment_id = fields.Many2one("terminal.segment", string="Segmen", required=True, ondelete="restrict")
     name = fields.Char(string="Nama", required=True)
     contact_number = fields.Char(string="No Kontak Terenkripsi", copy=False)
     contact_number_display = fields.Char(
